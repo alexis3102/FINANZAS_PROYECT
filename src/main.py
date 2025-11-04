@@ -4,12 +4,18 @@ from fastapi import FastAPI, Depends, Header, Request, Response, HTTPException, 
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt
+<<<<<<< HEAD
 from sqlmodel import SQLModel, select 
+=======
+from sqlmodel import SQLModel, select # Importamos 'select' para las consultas
+# Importamos SessionDep y Item (asumo que 'models' ya contiene Item)
+>>>>>>> 1c06e930ca172ccb29bb8a9c1eefdd16698d6bf7
 from src.routes.db_session import SessionDep 
 from src.config.db import engine
 from src import models
 from src.routes.item_router import items_router
 
+<<<<<<< HEAD
 # --- CONFIGURACIÓN DE RUTA ABSOLUTA (Simplificado) ---
 CURRENT_FILE_DIR = os.path.dirname(os.path.abspath(__file__))
 print(f"DEBUG: Directorio de main.py: {CURRENT_FILE_DIR}") 
@@ -19,6 +25,8 @@ ABSOLUTE_FILE_PATH = os.path.join(CURRENT_FILE_DIR, "templates", "admit.html")
 print(f"DEBUG: Ruta absoluta calculada: {ABSOLUTE_FILE_PATH}")
 
 
+=======
+>>>>>>> 1c06e930ca172ccb29bb8a9c1eefdd16698d6bf7
 # --- CONFIGURACIÓN INICIAL ---
 # Crea las tablas en la base de datos si no existen
 SQLModel.metadata.create_all(engine)
@@ -29,7 +37,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 # --- ROUTER DE ITEMS (CRUD) ---
 app.include_router(items_router)
 
+<<<<<<< HEAD
 # --- TOKEN Y AUTENTICACIÓN (Sin cambios) ---
+=======
+# --- TOKEN Y AUTENTICACIÓN ---
+
+# Nota: El diccionario 'users' ha sido ELIMINADO.
+>>>>>>> 1c06e930ca172ccb29bb8a9c1eefdd16698d6bf7
 
 def encode_token(payload: dict) -> str:
     """Crea un JWT para la sesión."""
@@ -38,7 +52,11 @@ def encode_token(payload: dict) -> str:
 
 def decode_token(
     token: Annotated[str, Depends(oauth2_scheme)],
+<<<<<<< HEAD
     db: SessionDep 
+=======
+    db: SessionDep # <-- DEPENDENCIA DE DB AÑADIDA
+>>>>>>> 1c06e930ca172ccb29bb8a9c1eefdd16698d6bf7
 ) -> dict:
     """Decodifica el JWT y busca el usuario en la DB."""
     try:
@@ -64,7 +82,11 @@ def decode_token(
 @app.post("/token", tags=['login'])
 def login(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+<<<<<<< HEAD
     db: SessionDep 
+=======
+    db: SessionDep # <-- DEPENDENCIA DE DB AÑADIDA
+>>>>>>> 1c06e930ca172ccb29bb8a9c1eefdd16698d6bf7
 ):
     """Verifica credenciales y devuelve el token de acceso."""
     # Buscar el usuario por nombre (username)
@@ -87,11 +109,18 @@ def profile(my_user: Annotated[dict, Depends(decode_token)]):
 
 
 # --- ACCESS AND ROLE (EJEMPLO DE ENDPOINT PROTEGIDO) ---
+<<<<<<< HEAD
+=======
+
+#access - token : secret-token
+#user-role : admit
+>>>>>>> 1c06e930ca172ccb29bb8a9c1eefdd16698d6bf7
 
 @app.get("/dashboard", tags=['access and role'])
 def dashboard(
     request: Request,
     reponse: Response,
+<<<<<<< HEAD
     #  CAMBIO CLAVE: access_token ahora es un parámetro de consulta (Query) 
     access_token: Annotated[str | None, Query(description="Token de acceso para la URL")] = None,
     user_role: Annotated[str | None, Header()] = None, # user_role sigue como Header si es necesario
@@ -101,6 +130,16 @@ def dashboard(
     if access_token != "secret-token":
         raise HTTPException(status_code=401, detail="No autorizado. Falta o es incorrecto el 'access_token' en la URL.")
     
+=======
+    # Asumo que la verificación del token ya ocurre en 'profile' o se puede añadir aquí
+    access_token: Annotated[str | None, Header()] = None,
+    user_role: Annotated[str | None, Header()] = None,
+    ):
+    # La lógica de autenticación básica se maneja en 'decode_token'.
+    # Este es un ejemplo de verificación adicional por header.
+    if access_token != "secret-token":
+        raise HTTPException(status_code=401, detail="No autorizado")
+>>>>>>> 1c06e930ca172ccb29bb8a9c1eefdd16698d6bf7
     reponse.headers["user_status"] = "enabled"
     
     # Verificación de existencia del archivo (para evitar 500)
