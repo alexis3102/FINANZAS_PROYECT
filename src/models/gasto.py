@@ -1,7 +1,7 @@
 # gasto.py
 from sqlmodel import Relationship, SQLModel, Field
 from typing import Optional
-from datetime import date 
+from datetime import date
 
 class GastoBase(SQLModel):
     tipo_gasto: str = Field(index=True)
@@ -13,6 +13,7 @@ class GastoCreateIn(SQLModel):
     tipo_gasto: str = Field()
     cantidad_gasto: float = Field()
     fecha_gasto: Optional[date] = Field(default_factory=date.today)
+    descripcion: Optional[str] = None  # ✅ AGREGADO
 
 class GastoUpdateIn(SQLModel):
     tipo_gasto: Optional[str] = None
@@ -33,5 +34,3 @@ class Gasto(GastoBase, table=True):
     
     id: Optional[int] = Field(default=None, primary_key=True)
     usuario_id: Optional[int] = Field(default=None, foreign_key="item.id")
-    
-    # Sin relación aquí, se agregará en __init__.py

@@ -82,9 +82,12 @@ def update_inversion(inversion_id: int, inversion_in: InversionUpdateIn, db: Ses
     if db_inversion.usuario_id != user["id"] and user["id"] != 0:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No autorizado para modificar esta inversión")
         
-    # Actualizar los campos
+    # ✅ CORRECCIÓN: Actualizar los campos correctamente
     update_data = inversion_in.model_dump(exclude_unset=True)
-    db_inversion.model_validate(update_data, update=True)
+    
+    # Actualizar cada campo individualmente
+    for key, value in update_data.items():
+        setattr(db_inversion, key, value)
     
     db.add(db_inversion)
     db.commit()

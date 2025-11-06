@@ -71,9 +71,12 @@ def update_gasto(gasto_id: int, gasto_in: GastoUpdateIn, db: SessionDep, user: U
     if db_gasto.usuario_id != user["id"] and user["id"] != 0:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="No autorizado para modificar este gasto")
         
-    # Actualizar los campos
+    # ✅ CORRECCIÓN: Actualizar los campos correctamente
     update_data = gasto_in.model_dump(exclude_unset=True)
-    db_gasto.model_validate(update_data, update=True)
+    
+    # Actualizar cada campo individualmente
+    for key, value in update_data.items():
+        setattr(db_gasto, key, value)
     
     db.add(db_gasto)
     db.commit()

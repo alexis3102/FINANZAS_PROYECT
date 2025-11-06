@@ -13,6 +13,7 @@ class InversionCreateIn(SQLModel):
     tipo_inversion: str = Field()
     cantidad_inversion: float = Field()
     fecha_inversion: Optional[date] = Field(default_factory=date.today)
+    descripcion: Optional[str] = None  # ✅ AGREGADO
 
 class InversionUpdateIn(SQLModel):
     tipo_inversion: Optional[str] = None
@@ -33,5 +34,3 @@ class Inversion(InversionBase, table=True):
     
     id: Optional[int] = Field(default=None, primary_key=True)
     usuario_id: Optional[int] = Field(default=None, foreign_key="item.id")
-    
-    # Sin relación aquí, se agregará en __init__.py
